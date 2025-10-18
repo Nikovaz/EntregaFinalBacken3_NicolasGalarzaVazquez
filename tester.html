@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tester de Endpoints - Backend Entregable</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .endpoint { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .endpoint h3 { color: #333; }
+        button { background: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px; white-space: pre-wrap; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Backend Entregable - Tester de Endpoints</h1>
+    
+    <div class="endpoint">
+        <h3>1. GET /api/mocks/mockingpets (100 mascotas mock)</h3>
+        <button onclick="testEndpoint('GET', '/api/mocks/mockingpets')">Probar</button>
+        <div id="result1" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="endpoint">
+        <h3>2. GET /api/mocks/mockingusers (50 usuarios mock)</h3>
+        <button onclick="testEndpoint('GET', '/api/mocks/mockingusers')">Probar</button>
+        <div id="result2" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="endpoint">
+        <h3>3. POST /api/mocks/generateData (Insertar en BD)</h3>
+        <input type="number" id="users" placeholder="Número de usuarios" value="5">
+        <input type="number" id="pets" placeholder="Número de mascotas" value="10">
+        <button onclick="generateData()">Generar e Insertar</button>
+        <div id="result3" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="endpoint">
+        <h3>4. GET /api/users (Ver usuarios insertados)</h3>
+        <button onclick="testEndpoint('GET', '/api/users')">Ver Usuarios</button>
+        <div id="result4" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="endpoint">
+        <h3>5. GET /api/pets (Ver mascotas insertadas)</h3>
+        <button onclick="testEndpoint('GET', '/api/pets')">Ver Mascotas</button>
+        <div id="result5" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+        
+        async function testEndpoint(method, endpoint) {
+            const resultDiv = document.getElementById('result' + getResultNumber(endpoint));
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Cargando...';
+            
+            try {
+                const response = await fetch(API_BASE + endpoint, { method });
+                const data = await response.json();
+                resultDiv.textContent = `Status: ${response.status}\n\n` + JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function generateData() {
+            const users = document.getElementById('users').value;
+            const pets = document.getElementById('pets').value;
+            const resultDiv = document.getElementById('result3');
+            
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Generando datos...';
+            
+            try {
+                const response = await fetch(API_BASE + '/api/mocks/generateData', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ users: parseInt(users), pets: parseInt(pets) })
+                });
+                const data = await response.json();
+                resultDiv.textContent = `Status: ${response.status}\n\n` + JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        function getResultNumber(endpoint) {
+            if (endpoint.includes('mockingpets')) return '1';
+            if (endpoint.includes('mockingusers')) return '2';
+            if (endpoint.includes('/users')) return '4';
+            if (endpoint.includes('/pets')) return '5';
+            return '1';
+        }
+    </script>
+</body>
+</html>

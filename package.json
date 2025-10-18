@@ -1,0 +1,44 @@
+{
+  "name": "backend-entregable-mocks",
+  "version": "1.0.0",
+  "description": "Proyecto Backend con sistema de mocking para usuarios y mascotas + Docker",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "mocha test/**/*.test.js --timeout 10000 --exit",
+    "test:watch": "mocha test/**/*.test.js --watch",
+    "docker:build": "docker build -t backend-entregable .",
+    "docker:run": "docker run -p 8080:8080 --env-file .env backend-entregable",
+    "docker:compose:up": "docker-compose up -d",
+    "docker:compose:down": "docker-compose down",
+    "docker:compose:logs": "docker-compose logs -f"
+  },
+  "keywords": [
+    "backend",
+    "express",
+    "mongoose",
+    "mocking",
+    "faker",
+    "docker",
+    "swagger"
+  ],
+  "author": "Tu Nombre",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "@faker-js/faker": "^8.0.2",
+    "dotenv": "^16.3.1",
+    "swagger-ui-express": "^5.0.0",
+    "swagger-jsdoc": "^6.2.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "mocha": "^10.2.0",
+    "chai": "^4.3.10",
+    "supertest": "^6.3.3"
+  }
+}
